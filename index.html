@@ -1,0 +1,649 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nguyen Duc Tam · AI Engineer</title>
+  <meta name="description" content="Nguyen Duc Tam: AI Engineer and CS student at HCMUT, building BRIDGE, an AI research assistant where every citation is verified against the source paper." />
+  <meta property="og:title" content="Nguyen Duc Tam · AI Engineer" />
+  <meta property="og:description" content="Building BRIDGE: AI research you can verify. Every citation opens the verbatim sentence in the source paper." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tamnd2004.github.io/" />
+  <meta name="theme-color" content="#070b18" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%235eead4'/%3E%3Cstop offset='1' stop-color='%23a78bfa'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23070b18'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-weight='800' font-size='26' fill='url(%23g)'%3ENDT%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #070b18;
+      --bg-2: #0b1124;
+      --surface: rgba(15, 23, 42, 0.72);
+      --surface-solid: #0f172a;
+      --line: rgba(148, 163, 184, 0.16);
+      --line-strong: rgba(148, 163, 184, 0.32);
+      --text: #e2e8f0;
+      --text-strong: #f8fafc;
+      --muted: #94a3b8;
+      --teal: #5eead4;
+      --violet: #a78bfa;
+      --amber: #fbbf24;
+      --green: #34d399;
+      --grad: linear-gradient(90deg, var(--teal), var(--violet) 50%, var(--amber));
+      --shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+      --radius: 18px;
+      --maxw: 1120px;
+      --on-grad: #0b1020;
+      color-scheme: dark;
+    }
+    :root[data-theme="light"] {
+      --bg: #f6f7fb;
+      --bg-2: #eef1f8;
+      --surface: rgba(255, 255, 255, 0.82);
+      --surface-solid: #ffffff;
+      --line: rgba(15, 23, 42, 0.10);
+      --line-strong: rgba(15, 23, 42, 0.22);
+      --text: #1e293b;
+      --text-strong: #0f172a;
+      --muted: #526072;
+      --teal: #0d9488;
+      --violet: #7c3aed;
+      --amber: #b45309;
+      --green: #059669;
+      --shadow: 0 20px 50px -24px rgba(15, 23, 42, 0.25);
+      --on-grad: #ffffff;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: light) {
+      :root:not([data-theme="dark"]) {
+        --bg: #f6f7fb; --bg-2: #eef1f8; --surface: rgba(255,255,255,0.82); --surface-solid: #ffffff;
+        --line: rgba(15,23,42,0.10); --line-strong: rgba(15,23,42,0.22); --text: #1e293b; --text-strong: #0f172a;
+        --muted: #526072; --teal: #0d9488; --violet: #7c3aed; --amber: #b45309; --green: #059669;
+        --shadow: 0 20px 50px -24px rgba(15,23,42,0.25); --on-grad: #ffffff; color-scheme: light;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+    h1, h2, h3 { font-family: "Space Grotesk", Inter, sans-serif; color: var(--text-strong); line-height: 1.15; margin: 0; }
+    .mono { font-family: "JetBrains Mono", ui-monospace, monospace; }
+    .wrap { width: min(var(--maxw), 100% - 32px); margin-inline: auto; }
+    .grad-text {
+      background: var(--grad); background-size: 200% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmer 8s ease-in-out infinite;
+    }
+    @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    :focus-visible { outline: 2px solid var(--teal); outline-offset: 3px; border-radius: 8px; }
+
+    /* ambient background */
+    .ambient { position: fixed; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+    .blob { position: absolute; width: 520px; height: 520px; border-radius: 50%; filter: blur(90px); opacity: .28; animation: drift 22s ease-in-out infinite; }
+    .blob.b1 { background: #7c3aed; top: -120px; right: -120px; }
+    .blob.b2 { background: #14b8a6; bottom: -160px; left: -140px; animation-delay: -8s; }
+    .blob.b3 { background: #f59e0b; top: 45%; left: 55%; width: 360px; height: 360px; opacity: .14; animation-delay: -14s; }
+    :root[data-theme="light"] .blob { opacity: .16; }
+    @keyframes drift { 0%,100% { transform: translate(0,0) scale(1); } 33% { transform: translate(-60px, 40px) scale(1.08); } 66% { transform: translate(40px, -30px) scale(.95); } }
+
+    /* nav */
+    nav.top {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px);
+      background: color-mix(in srgb, var(--bg) 70%, transparent);
+      border-bottom: 1px solid var(--line);
+    }
+    nav.top .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; gap: 16px; }
+    .logo { font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 20px; text-decoration: none; letter-spacing: -.02em; }
+    .logo span { color: var(--teal); }
+    .nav-links { display: flex; gap: 6px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 10px; transition: color .2s, background .2s; }
+    .nav-links a:hover { color: var(--text-strong); background: var(--line); }
+    .icon-btn { width: 38px; height: 38px; border-radius: 10px; border: 1px solid var(--line); background: var(--surface); color: var(--text); display: grid; place-items: center; cursor: pointer; transition: transform .2s, border-color .2s; }
+    .icon-btn:hover { transform: rotate(-12deg); border-color: var(--line-strong); }
+    @media (max-width: 720px) { .nav-links a.hide-sm { display: none; } }
+
+    /* hero */
+    .hero { position: relative; min-height: calc(100vh - 64px); display: grid; align-items: center; padding: 72px 0 96px; }
+    #net { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; opacity: .9; }
+    .hero .wrap { position: relative; z-index: 1; }
+    .eyebrow { color: var(--muted); font-size: 15px; display: inline-flex; align-items: center; gap: 10px; }
+    .eyebrow .pulse { width: 9px; height: 9px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 0 var(--green); animation: ping 2s infinite; }
+    @keyframes ping { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 60%, transparent); } 100% { box-shadow: 0 0 0 14px transparent; } }
+    .hero h1 { font-size: clamp(44px, 8vw, 96px); font-weight: 700; letter-spacing: -0.04em; margin: 18px 0 10px; }
+    .typed { font-size: clamp(20px, 3vw, 30px); font-weight: 600; color: var(--text-strong); min-height: 1.5em; font-family: "Space Grotesk", sans-serif; }
+    .typed .caret { display: inline-block; width: 3px; height: 1.05em; background: var(--teal); vertical-align: -0.15em; margin-left: 4px; animation: caret 1s steps(1) infinite; }
+    @keyframes caret { 50% { opacity: 0; } }
+    .lead { max-width: 640px; color: var(--muted); font-size: clamp(16px, 2vw, 19px); margin: 18px 0 32px; }
+    .lead strong { color: var(--text); font-weight: 600; }
+    .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 10px; padding: 12px 18px; border-radius: 12px;
+      font-weight: 600; font-size: 15px; text-decoration: none; border: 1px solid var(--line-strong);
+      background: var(--surface); color: var(--text-strong); transition: transform .2s, border-color .2s, box-shadow .2s;
+    }
+    .btn:hover { transform: translateY(-2px); border-color: var(--teal); box-shadow: 0 10px 30px -12px color-mix(in srgb, var(--teal) 60%, transparent); }
+    .btn.primary { background: var(--grad); background-size: 200% 100%; color: var(--on-grad); border: none; animation: shimmer 6s ease-in-out infinite; }
+    .btn svg { width: 18px; height: 18px; }
+    .scroll-hint { position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); color: var(--muted); font-size: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 1; }
+    .mouse { width: 22px; height: 34px; border: 2px solid var(--line-strong); border-radius: 12px; position: relative; }
+    .mouse::after { content: ""; position: absolute; left: 50%; top: 6px; width: 4px; height: 7px; border-radius: 2px; background: var(--teal); transform: translateX(-50%); animation: wheel 1.8s ease-in-out infinite; }
+    @keyframes wheel { 0% { opacity: 0; transform: translate(-50%, 0); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 12px); } }
+
+    /* sections */
+    section.block { padding: 110px 0; position: relative; }
+    .kicker { font-family: "JetBrains Mono", monospace; color: var(--teal); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+    .section-title { font-size: clamp(32px, 5vw, 52px); letter-spacing: -0.03em; margin: 10px 0 18px; }
+    .section-sub { color: var(--muted); max-width: 680px; font-size: 18px; margin: 0 0 44px; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+      padding: 26px; box-shadow: var(--shadow); position: relative; overflow: hidden;
+      transition: transform .3s cubic-bezier(.2,.7,.2,1), border-color .3s;
+    }
+    .card::before {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--violet) 14%, transparent), transparent 45%);
+      opacity: 0; transition: opacity .3s;
+    }
+    .card:hover::before { opacity: 1; }
+    .card:hover { border-color: var(--line-strong); }
+
+    /* about */
+    .about-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 28px; }
+    .about-grid p { font-size: 18px; color: var(--muted); margin: 0 0 16px; }
+    .about-grid p strong { color: var(--text-strong); }
+    .facts { display: grid; gap: 14px; }
+    .fact { display: flex; gap: 14px; align-items: flex-start; }
+    .fact .ico { flex: none; width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: color-mix(in srgb, var(--teal) 14%, transparent); color: var(--teal); }
+    .fact .ico svg { width: 20px; height: 20px; }
+    .fact b { display: block; color: var(--text-strong); font-weight: 600; }
+    .fact span { color: var(--muted); font-size: 14px; }
+    @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; } }
+
+    /* bridge */
+    .bridge-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .bridge-name { font-size: clamp(48px, 9vw, 104px); letter-spacing: -0.05em; font-weight: 700; line-height: 1; }
+    .acronym { color: var(--muted); font-size: 15px; margin-top: 10px; }
+    .acronym b { color: var(--text-strong); }
+
+    .pipeline { margin: 48px 0 28px; }
+    .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; position: relative; }
+    .step { padding: 20px 18px 22px; border-radius: 16px; border: 1px solid var(--line); background: var(--surface); transition: border-color .4s, transform .4s, background .4s; position: relative; }
+    .step .n { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); transition: color .4s; }
+    .step h3 { font-size: 19px; margin: 8px 0 6px; }
+    .step p { margin: 0; color: var(--muted); font-size: 13.5px; line-height: 1.5; }
+    .step.active { border-color: var(--teal); transform: translateY(-6px); background: color-mix(in srgb, var(--teal) 8%, var(--surface)); }
+    .step.active .n { color: var(--teal); }
+    .step .approve { position: absolute; top: -12px; right: 12px; font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 999px; color: var(--teal); background: var(--bg); border: 1px solid var(--teal); }
+    .track { height: 4px; border-radius: 4px; background: var(--line); margin-top: 22px; overflow: hidden; }
+    .track > i { display: block; height: 100%; width: 0; background: var(--grad); border-radius: 4px; transition: width .6s cubic-bezier(.2,.7,.2,1); }
+    @media (max-width: 860px) { .steps { grid-template-columns: 1fr 1fr; } .steps .step:last-child { grid-column: span 2; } }
+    @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } .steps .step:last-child { grid-column: auto; } }
+
+    .verify { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: stretch; margin-top: 28px; }
+    .vstep { display: flex; flex-direction: column; gap: 12px; }
+    .vstep .label { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--muted); }
+    .skel { height: 10px; border-radius: 6px; background: var(--line); }
+    .skel.hl { background: linear-gradient(90deg, color-mix(in srgb, var(--amber) 55%, transparent), color-mix(in srgb, var(--amber) 25%, transparent)); }
+    .skel.w90 { width: 90%; } .skel.w70 { width: 70%; } .skel.w80 { width: 80%; } .skel.w55 { width: 55%; }
+    .cite { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; font-size: 12px; font-weight: 700; color: var(--on-grad); background: var(--violet); }
+    .check-big { width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--green) 16%, transparent); border: 2px solid var(--green); }
+    .check-big path { stroke-dasharray: 40; stroke-dashoffset: 40; }
+    .in-view .check-big path { animation: drawc .7s .5s ease-out forwards; }
+    @keyframes drawc { to { stroke-dashoffset: 0; } }
+    .vstep .title { font-weight: 600; color: var(--text-strong); }
+    .arrow { color: var(--muted); }
+    @media (max-width: 860px) { .verify { grid-template-columns: 1fr; } }
+
+    .features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 40px; }
+    .feature .ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; margin-bottom: 16px; }
+    .feature .ico svg { width: 22px; height: 22px; }
+    .feature h3 { font-size: 20px; margin-bottom: 8px; }
+    .feature p { color: var(--muted); margin: 0; font-size: 15px; }
+    .feature .see { margin-top: 14px; font-size: 13px; color: var(--text); padding-top: 14px; border-top: 1px dashed var(--line-strong); }
+    .feature .see b { color: var(--teal); font-weight: 600; }
+    @media (max-width: 860px) { .features { grid-template-columns: 1fr; } }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 40px; }
+    .stat .num { font-family: "Space Grotesk", sans-serif; font-size: clamp(36px, 5vw, 52px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+    .stat .lbl { color: var(--text-strong); font-weight: 600; margin-top: 10px; }
+    .stat .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .note { color: var(--muted); font-size: 13px; margin-top: 14px; }
+    @media (max-width: 860px) { .stats { grid-template-columns: 1fr 1fr; } }
+
+    .role-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-top: 16px; }
+    .role-grid ul { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+    .role-grid li { display: flex; gap: 12px; color: var(--text); }
+    .role-grid li::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; margin-top: 9px; background: var(--grad); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .chip { font-family: "JetBrains Mono", monospace; font-size: 12.5px; padding: 6px 10px; border-radius: 999px; border: 1px solid var(--line-strong); color: var(--text); background: var(--bg-2); transition: transform .2s, border-color .2s; }
+    .chip:hover { transform: translateY(-2px); border-color: var(--violet); }
+    .bridge-ctas { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    @media (max-width: 860px) { .role-grid { grid-template-columns: 1fr; } }
+
+    /* projects */
+    .projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .project { text-decoration: none; display: flex; flex-direction: column; gap: 10px; transform-style: preserve-3d; }
+    .project .top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .project .tag { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--violet); }
+    .project h3 { font-size: 21px; }
+    .project p { color: var(--muted); margin: 0; font-size: 15px; }
+    .project .go { color: var(--muted); transition: transform .25s, color .25s; }
+    .project:hover .go { transform: translate(3px, -3px); color: var(--teal); }
+    .project .chips .chip { font-size: 11.5px; padding: 4px 9px; }
+    @media (max-width: 760px) { .projects { grid-template-columns: 1fr; } }
+
+    /* timeline */
+    .timeline { position: relative; margin-left: 10px; padding-left: 30px; border-left: 2px solid var(--line); display: grid; gap: 26px; }
+    .tl { position: relative; }
+    .tl::before { content: ""; position: absolute; left: -38px; top: 6px; width: 14px; height: 14px; border-radius: 50%; background: var(--bg); border: 3px solid var(--teal); }
+    .tl:nth-child(2)::before { border-color: var(--violet); }
+    .tl:nth-child(3)::before { border-color: var(--amber); }
+    .tl .when { font-family: "JetBrains Mono", monospace; font-size: 12.5px; color: var(--muted); }
+    .tl h3 { font-size: 20px; margin: 4px 0 6px; }
+    .tl p { margin: 0; color: var(--muted); }
+
+    /* contact */
+    .contact { text-align: center; padding: 64px 28px; }
+    .contact h2 { font-size: clamp(32px, 6vw, 60px); letter-spacing: -0.03em; }
+    .contact p { color: var(--muted); font-size: 18px; margin: 16px auto 30px; max-width: 560px; }
+    .contact .ctas { justify-content: center; }
+    footer { padding: 40px 0 56px; color: var(--muted); font-size: 13px; text-align: center; }
+
+    /* reveal */
+    .reveal { opacity: 0; transform: translateY(26px); transition: opacity .9s cubic-bezier(.2,.7,.2,1), transform .9s cubic-bezier(.2,.7,.2,1); transition-delay: var(--d, 0s); }
+    .reveal.in-view { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .reveal { opacity: 1; transform: none; }
+      .check-big path { stroke-dashoffset: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div></div>
+
+  <nav class="top" aria-label="Main">
+    <div class="wrap">
+      <a class="logo" href="#top" aria-label="Nguyen Duc Tam, home">ndt<span>.</span></a>
+      <div class="nav-links">
+        <a href="#about" class="hide-sm">About</a>
+        <a href="#bridge">BRIDGE</a>
+        <a href="#projects" class="hide-sm">Projects</a>
+        <a href="#contact">Contact</a>
+        <button class="icon-btn" id="theme" type="button" aria-label="Toggle light and dark theme">
+          <svg id="theme-ico" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <canvas id="net" aria-hidden="true"></canvas>
+    <div class="wrap">
+      <div class="eyebrow mono reveal"><span class="pulse"></span> &gt; hello, world. I'm</div>
+      <h1 class="reveal" style="--d:.1s"><span class="grad-text">Nguyen Duc Tam</span></h1>
+      <div class="typed reveal" style="--d:.2s" aria-live="polite"><span id="typed">AI Engineer</span><span class="caret" aria-hidden="true"></span></div>
+      <p class="lead reveal" style="--d:.3s">
+        AI Engineer and Computer Science student at <strong>HCMUT</strong>. I build <strong>LLM agent systems that show their evidence</strong>: if a model says something, you should be able to click through to where it came from.
+      </p>
+      <div class="ctas reveal" style="--d:.4s">
+        <a class="btn primary" href="#bridge">Explore BRIDGE
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
+        <a class="btn" href="https://c4-app-t046.duckdns.org" target="_blank" rel="noopener">Live demo
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg>
+        </a>
+        <a class="btn" href="https://github.com/tamnd2004" target="_blank" rel="noopener" aria-label="GitHub tamnd2004">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2.1c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.2 1.9 1.2 1.1 1.9 2.9 1.3 3.6 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.6 18.3 5 18.3 5c.7 1.7.2 2.9.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5z"/></svg>
+          GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/t%C3%A2m-nguy%E1%BB%85n-%C4%91%E1%BB%A9c-4526662ba/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.4 20.5h-3.6v-5.6c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9v5.7H9.3V9h3.4v1.6h.1c.5-.9 1.6-1.8 3.4-1.8 3.6 0 4.3 2.4 4.3 5.5v6.2zM5.3 7.4a2.1 2.1 0 1 1 0-4.2 2.1 2.1 0 0 1 0 4.2zM7.1 20.5H3.5V9h3.6v11.5zM22.2 0H1.8C.8 0 0 .8 0 1.7v20.6c0 .9.8 1.7 1.8 1.7h20.4c1 0 1.8-.8 1.8-1.7V1.7C24 .8 23.2 0 22.2 0z"/></svg>
+          LinkedIn</a>
+      </div>
+    </div>
+    <div class="scroll-hint" aria-hidden="true"><div class="mouse"></div>scroll</div>
+  </header>
+
+  <main>
+    <section class="block" id="about">
+      <div class="wrap">
+        <div class="kicker reveal">01 · About</div>
+        <h2 class="section-title reveal">Trust, but <span class="grad-text">verify</span>.</h2>
+        <div class="about-grid">
+          <div class="reveal" style="--d:.1s">
+            <p>Researchers use AI every day to find papers, summarize them and write, but they still re-check everything by hand because models invent sources. I care about closing that gap.</p>
+            <p>Right now I'm building <strong>BRIDGE</strong> with my team in the <strong>AI20K Build Phase (Cohort 4, VinUniversity)</strong>: an assistant where every claim links to a sentence that code has confirmed exists in the source paper.</p>
+            <p>Before that, I built machine-learning workflows for churn prediction and customer segmentation as an <strong>AI Engineer intern at GOSUVERSE</strong>, and I've taught IELTS since 2022.</p>
+          </div>
+          <div class="card facts reveal" style="--d:.2s">
+            <div class="fact"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c3 2 9 2 12 0v-5"/></svg></div><div><b>B.S. Computer Science, HCMUT</b><span>2022 – 2026 · GPA 3.6 / 4.0 · OISP Scholarship</span></div></div>
+            <div class="fact"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="m2 17 10 5 10-5M2 12l10 5 10-5"/></svg></div><div><b>AI20K Build Phase, Cohort 4</b><span>Team P-046 · building BRIDGE</span></div></div>
+            <div class="fact"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h14M5 12h9M5 16h6"/><rect x="2" y="3" width="20" height="18" rx="3"/></svg></div><div><b>IELTS 8.0</b><span>Vietnamese (native) · English (full professional)</span></div></div>
+            <div class="fact"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div><div><b>Ho Chi Minh City, Vietnam</b><span>LLM agents · retrieval · evaluation</span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="bridge">
+      <div class="wrap">
+        <div class="kicker reveal">02 · Featured project</div>
+        <div class="bridge-head">
+          <div>
+            <h2 class="bridge-name reveal"><span class="grad-text">BRIDGE</span></h2>
+            <div class="acronym reveal" style="--d:.1s"><b>B</b>roadening <b>R</b>esearch <b>I</b>nquiry to <b>D</b>iscover <b>G</b>aps and <b>E</b>vidence</div>
+          </div>
+          <div class="bridge-ctas reveal" style="--d:.2s">
+            <a class="btn primary" href="https://c4-app-t046.duckdns.org" target="_blank" rel="noopener">Try the live demo
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9"/></svg></a>
+            <a class="btn" href="https://github.com/AI20K-Build-Phase-Cohort-4/P-046" target="_blank" rel="noopener">Repository</a>
+          </div>
+        </div>
+        <p class="section-sub reveal" style="--d:.15s; margin-top:22px">Know whether a research direction or a paper's code is worth the effort, <em>before</em> you spend it. An AI research assistant for literature reviews, citation checks and repo reproducibility checks, where every claim links to a verbatim quote verified against the source paper.</p>
+
+        <div class="pipeline card reveal" id="pipeline">
+          <div class="kicker" style="color:var(--muted)">How a literature review runs</div>
+          <div class="steps" style="margin-top:26px">
+            <div class="step" data-i="0"><span class="approve">✋ you approve</span><div class="n">01</div><h3>Criteria</h3><p>Your topic becomes weighted criteria, year range and exclusions. You edit them and see cost first.</p></div>
+            <div class="step" data-i="1"><div class="n">02</div><h3>Search</h3><p>Semantic Scholar, OpenAlex and arXiv, with queries for each facet.</p></div>
+            <div class="step" data-i="2"><div class="n">03</div><h3>Screen</h3><p>Every candidate is scored against every criterion, with a quote.</p></div>
+            <div class="step" data-i="3"><span class="approve">✋ you approve</span><div class="n">04</div><h3>Read &amp; verify</h3><p>An agent reads up to 100 papers in full. Code checks each quote really exists.</p></div>
+            <div class="step" data-i="4"><div class="n">05</div><h3>Write</h3><p>The review is written only from checked evidence; every sentence is guarded.</p></div>
+          </div>
+          <div class="track" aria-hidden="true"><i id="track"></i></div>
+        </div>
+
+        <div class="verify card reveal" id="verify">
+          <div class="vstep">
+            <div class="label">1 · claim in the review</div>
+            <div class="skel w90"></div>
+            <div style="display:flex; gap:8px; align-items:center"><div class="skel w70" style="flex:1"></div><span class="cite">3</span></div>
+            <div class="skel w55"></div>
+            <div class="title">Click any citation…</div>
+          </div>
+          <div class="vstep">
+            <div class="label">2 · sentence in the source paper</div>
+            <div class="skel w80"></div>
+            <div class="skel hl w90"></div>
+            <div class="skel w70"></div>
+            <div class="title">…to see the exact sentence it came from</div>
+          </div>
+          <div class="vstep" style="align-items:flex-start">
+            <div class="label">3 · checked by code, not the model</div>
+            <div class="check-big"><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="var(--green)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="title">No verbatim match, no citation.</div>
+          </div>
+        </div>
+
+        <div class="features">
+          <div class="card feature reveal">
+            <div class="ico" style="background:color-mix(in srgb, var(--teal) 15%, transparent); color:var(--teal)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5v14z"/><path d="M8 7h8M8 11h6"/></svg></div>
+            <h3>Literature review</h3>
+            <p>Plans, searches, screens and reads the field for you, then writes themes, research gaps and a comparison table.</p>
+            <div class="see">You see: <b>every citation opens the verbatim sentence</b></div>
+          </div>
+          <div class="card feature reveal" style="--d:.1s">
+            <div class="ico" style="background:color-mix(in srgb, var(--violet) 15%, transparent); color:var(--violet)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3M8 11l2 2 4-4"/></svg></div>
+            <h3>Citation check</h3>
+            <p>Paste a draft, a chatbot answer or BibTeX. BRIDGE checks that each source exists and that each sentence matches it.</p>
+            <div class="see">You see: <b>what needs a second look, first</b></div>
+          </div>
+          <div class="card feature reveal" style="--d:.2s">
+            <div class="ico" style="background:color-mix(in srgb, var(--amber) 15%, transparent); color:var(--amber)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg></div>
+            <h3>Repo reproducibility check</h3>
+            <p>Compares a paper's GitHub repo with the paper by reading code, config and data only. It never runs it.</p>
+            <div class="see">You see: <b>gaps with file, line and paper passage</b></div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="card stat reveal"><div class="num grad-text" data-count="0" data-dec="0">0</div><div class="lbl">fabricated citations</div><div class="sub">in every measured run</div></div>
+          <div class="card stat reveal" style="--d:.08s"><div class="num grad-text" data-count="0.467" data-dec="3">0</div><div class="lbl">paper-search recall</div><div class="sub">vs 0.367 for Ai2's Asta Paper Finder (RealScholarQuery)</div></div>
+          <div class="card stat reveal" style="--d:.16s"><div class="num grad-text" data-count="93" data-dec="0">0</div><div class="lbl">sign-ups in launch week</div><div class="sub">Oct 12 – 18, 2026, team accounts excluded</div></div>
+          <div class="card stat reveal" style="--d:.24s"><div class="num grad-text" data-count="7" data-dec="0" data-suffix="/10">0</div><div class="lbl">real repo issues caught</div><div class="sub">on a fresh batch of repos</div></div>
+        </div>
+        <div class="note reveal">Small samples; numbers from the project README. Read them as signals, not guarantees.</div>
+
+        <div class="role-grid">
+          <div class="card reveal">
+            <div class="kicker">My part</div>
+            <h3 style="font-size:22px; margin-top:8px">AI Engineer &amp; Full-stack Developer · team of 4</h3>
+            <ul>
+              <li>Built the LangGraph pipeline: user-approved criteria, multi-source search, LLM screening and a full-text verification agent.</li>
+              <li>Built the bilingual React / TypeScript site and shipped it with Docker Compose and Caddy, with CI running ruff, mypy, pytest and vitest before each release.</li>
+            </ul>
+          </div>
+          <div class="card reveal" style="--d:.1s">
+            <div class="kicker">Stack</div>
+            <div class="chips">
+              <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">LangGraph</span><span class="chip">OpenAI API</span><span class="chip">NeMo Guardrails</span><span class="chip">PostgreSQL</span><span class="chip">SQLite</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">Docker</span><span class="chip">Caddy</span><span class="chip">OpenTelemetry</span><span class="chip">PostHog</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="projects">
+      <div class="wrap">
+        <div class="kicker reveal">03 · More work</div>
+        <h2 class="section-title reveal">Other things I've built</h2>
+        <p class="section-sub reveal">From voice AI to data pipelines. These live on my other GitHub account, <a href="https://github.com/tamnd04" target="_blank" rel="noopener" style="color:var(--teal)">@tamnd04</a>.</p>
+        <div class="projects">
+          <a class="card project reveal" href="https://github.com/tamnd04/MOSAIC-CRS" target="_blank" rel="noopener">
+            <div class="top"><span class="tag">Voice AI · RL</span><span class="go">↗</span></div>
+            <h3>MOSAIC-CRS &amp; Voice AI</h3>
+            <p>A PyTorch conversational movie recommender trained with supervised learning and PPO, with a real-time local voice interface: streaming audio, VAD, barge-in and faster-whisper.</p>
+            <div class="chips"><span class="chip">PyTorch</span><span class="chip">FastAPI</span><span class="chip">WebSocket</span><span class="chip">LangChain</span><span class="chip">Ollama</span></div>
+          </a>
+          <a class="card project reveal" style="--d:.08s" href="https://github.com/chaunguye/predictive_maintainance" target="_blank" rel="noopener">
+            <div class="top"><span class="tag">Data engineering · BI</span><span class="go">↗</span></div>
+            <h3>Predictive Maintenance Analytics</h3>
+            <p>A streaming pipeline on the NASA Bearing Dataset to monitor bearing health and failure risk, with Power BI dashboards.</p>
+            <div class="chips"><span class="chip">Kafka</span><span class="chip">Spark</span><span class="chip">PostgreSQL</span><span class="chip">Docker</span><span class="chip">Power BI</span></div>
+          </a>
+          <a class="card project reveal" href="https://github.com/phuongwhuynh/AI-Text-Detection" target="_blank" rel="noopener">
+            <div class="top"><span class="tag">NLP</span><span class="go">↗</span></div>
+            <h3>Vietnamese AI-Text Detection</h3>
+            <p>Detects AI-generated Vietnamese articles with PhoBERT / E5 embeddings, Deep SVDD and contrastive learning.</p>
+            <div class="chips"><span class="chip">PhoBERT</span><span class="chip">E5</span><span class="chip">Deep SVDD</span></div>
+          </a>
+          <a class="card project reveal" style="--d:.08s" href="https://github.com/tamnd04/Low-Light-Image-Enhancement-Project" target="_blank" rel="noopener">
+            <div class="top"><span class="tag">Computer vision</span><span class="go">↗</span></div>
+            <h3>Low-Light Image Enhancement</h3>
+            <p>Extends RetinexFormer with perceptual and MS-SSIM losses, benchmarked on the LOL v1 dataset.</p>
+            <div class="chips"><span class="chip">RetinexFormer</span><span class="chip">MS-SSIM</span><span class="chip">LOL v1</span></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="experience" style="padding-top:40px">
+      <div class="wrap">
+        <div class="kicker reveal">04 · Experience</div>
+        <h2 class="section-title reveal">Where I've been</h2>
+        <div class="timeline">
+          <div class="tl reveal"><div class="when">Sep 2026 – now</div><h3>AI Engineer &amp; Full-stack Developer · BRIDGE</h3><p>AI20K Build Phase, Cohort 4 (VinUniversity). Team P-046.</p></div>
+          <div class="tl reveal" style="--d:.08s"><div class="when">Jun 2025 – Sep 2025</div><h3>AI Engineer Intern · GOSUVERSE</h3><p>Churn prediction and customer segmentation workflows, turned into interpretable customer groups and a web app.</p></div>
+          <div class="tl reveal" style="--d:.16s"><div class="when">Jun 2022 – now</div><h3>IELTS Instructor · McIELTS</h3><p>English instruction focused on IELTS exam preparation.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="contact">
+      <div class="wrap">
+        <div class="card contact reveal">
+          <div class="kicker">05 · Contact</div>
+          <h2 style="margin-top:12px">Let's build something <span class="grad-text">verifiable</span>.</h2>
+          <p>Working on LLM agents, retrieval or evaluation? I'd like to hear about it.</p>
+          <div class="ctas">
+            <a class="btn primary" href="https://www.linkedin.com/in/t%C3%A2m-nguy%E1%BB%85n-%C4%91%E1%BB%A9c-4526662ba/" target="_blank" rel="noopener">Connect on LinkedIn</a>
+            <a class="btn" href="https://github.com/tamnd2004" target="_blank" rel="noopener">@tamnd2004</a>
+            <a class="btn" href="https://github.com/tamnd04" target="_blank" rel="noopener">@tamnd04</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">© <span id="yr">2026</span> Nguyen Duc Tam · Built with plain HTML, CSS and a little canvas.</div>
+  </footer>
+
+  <script>
+    (function () {
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      document.getElementById('yr').textContent = new Date().getFullYear();
+
+      /* theme toggle */
+      const root = document.documentElement;
+      const btn = document.getElementById('theme');
+      const ico = document.getElementById('theme-ico');
+      const sun = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+      const moon = '<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>';
+      function currentTheme() {
+        return root.dataset.theme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      }
+      function paintIcon() { ico.innerHTML = currentTheme() === 'dark' ? sun : moon; }
+      try { const saved = localStorage.getItem('theme'); if (saved) root.dataset.theme = saved; } catch (e) {}
+      paintIcon();
+      btn.addEventListener('click', () => {
+        const next = currentTheme() === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        try { localStorage.setItem('theme', next); } catch (e) {}
+        paintIcon();
+      });
+
+      /* typewriter */
+      const roles = ['AI Engineer', 'LLM agents that show their evidence', 'Building BRIDGE', 'CS @ HCMUT'];
+      const el = document.getElementById('typed');
+      if (!reduce) {
+        let r = 0, i = roles[0].length, del = true;
+        setTimeout(function tick() {
+          const word = roles[r];
+          if (del) { i--; if (i <= 0) { del = false; r = (r + 1) % roles.length; } }
+          else { i++; if (i >= roles[r].length) { del = true; el.textContent = roles[r]; return setTimeout(tick, 1900); } }
+          el.textContent = roles[r].slice(0, Math.max(i, 0));
+          setTimeout(tick, del ? 32 : 62);
+        }, 2200);
+      }
+
+      /* reveal on scroll + counters */
+      const counters = new WeakSet();
+      function runCounter(n) {
+        if (counters.has(n)) return; counters.add(n);
+        const target = parseFloat(n.dataset.count), dec = +n.dataset.dec || 0, suf = n.dataset.suffix || '';
+        if (reduce || target === 0) { n.textContent = target.toFixed(dec) + suf; return; }
+        const t0 = performance.now(), dur = 1600;
+        (function step(t) {
+          const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+          n.textContent = (target * e).toFixed(dec) + suf;
+          if (p < 1) requestAnimationFrame(step);
+        })(t0);
+      }
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (!en.isIntersecting) return;
+          en.target.classList.add('in-view');
+          en.target.querySelectorAll('[data-count]').forEach(runCounter);
+          io.unobserve(en.target);
+        });
+      }, { threshold: 0.15 });
+      document.querySelectorAll('.reveal, #verify').forEach((n) => io.observe(n));
+
+      /* pipeline stepper */
+      const steps = [...document.querySelectorAll('.step')];
+      const track = document.getElementById('track');
+      let cur = 0, timer = null;
+      function show(i) {
+        steps.forEach((s, k) => s.classList.toggle('active', k === i));
+        track.style.width = ((i + 1) / steps.length * 100) + '%';
+      }
+      function start() { if (timer) return; show(cur); timer = setInterval(() => { cur = (cur + 1) % steps.length; show(cur); }, 1800); }
+      function stop() { clearInterval(timer); timer = null; }
+      if (reduce) { steps.forEach((s) => s.classList.add('active')); track.style.width = '100%'; }
+      else {
+        new IntersectionObserver((e) => e[0].isIntersecting ? start() : stop(), { threshold: 0.3 }).observe(document.getElementById('pipeline'));
+        steps.forEach((s, k) => s.addEventListener('mouseenter', () => { stop(); cur = k; show(k); }));
+        steps.forEach((s) => s.addEventListener('mouseleave', start));
+      }
+
+      /* card spotlight + tilt */
+      document.querySelectorAll('.card').forEach((c) => {
+        c.addEventListener('pointermove', (ev) => {
+          const r = c.getBoundingClientRect();
+          c.style.setProperty('--mx', (ev.clientX - r.left) + 'px');
+          c.style.setProperty('--my', (ev.clientY - r.top) + 'px');
+          if (!reduce && c.classList.contains('project')) {
+            const rx = ((ev.clientY - r.top) / r.height - .5) * -6, ry = ((ev.clientX - r.left) / r.width - .5) * 6;
+            c.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+          }
+        });
+        c.addEventListener('pointerleave', () => { if (c.classList.contains('project')) c.style.transform = ''; });
+      });
+
+      /* hero evidence network */
+      const cv = document.getElementById('net');
+      const ctx = cv.getContext('2d');
+      let W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2), nodes = [], mouse = { x: -999, y: -999 };
+      const palette = ['#5eead4', '#a78bfa', '#fbbf24'];
+      function resize() {
+        const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
+        cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.round(Math.min(90, Math.max(28, W * H / 16000)));
+        nodes = Array.from({ length: count }, () => ({
+          x: Math.random() * W, y: Math.random() * H,
+          vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+          r: Math.random() * 1.8 + 1.2, c: palette[(Math.random() * 3) | 0]
+        }));
+      }
+      function frame() {
+        ctx.clearRect(0, 0, W, H);
+        const light = currentTheme() === 'light';
+        for (const n of nodes) {
+          if (!reduce) { n.x += n.vx; n.y += n.vy; }
+          if (n.x < 0 || n.x > W) n.vx *= -1;
+          if (n.y < 0 || n.y > H) n.vy *= -1;
+          const dx = mouse.x - n.x, dy = mouse.y - n.y, d = Math.hypot(dx, dy);
+          if (d < 160 && !reduce) { n.x += dx * .004; n.y += dy * .004; }
+        }
+        for (let i = 0; i < nodes.length; i++) {
+          for (let j = i + 1; j < nodes.length; j++) {
+            const a = nodes[i], b = nodes[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+            if (d < 130) {
+              ctx.strokeStyle = light ? `rgba(76, 29, 149, ${(1 - d / 130) * .22})` : `rgba(167, 139, 250, ${(1 - d / 130) * .28})`;
+              ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            }
+          }
+          const m = Math.hypot(nodes[i].x - mouse.x, nodes[i].y - mouse.y);
+          if (m < 170) {
+            ctx.strokeStyle = light ? `rgba(13, 148, 136, ${(1 - m / 170) * .5})` : `rgba(94, 234, 212, ${(1 - m / 170) * .55})`;
+            ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+          }
+        }
+        for (const n of nodes) {
+          ctx.fillStyle = n.c; ctx.globalAlpha = light ? .55 : .85;
+          ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2); ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (!reduce) requestAnimationFrame(frame);
+      }
+      window.addEventListener('resize', resize);
+      cv.parentElement.addEventListener('pointermove', (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; });
+      cv.parentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -999; });
+      resize(); frame();
+    })();
+  </script>
+</body>
+</html>
